@@ -1,0 +1,42 @@
+{
+    "name": "webexmachina/contao-webp-converter-bundle",
+    "description": "WebP Converter for Contao Open Source CMS",
+    "keywords": ["webp", "webexmachina", "bundle", "contao"],
+    "type": "contao-bundle",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Web ex Machina",
+            "homepage": "https://www.webexmachina.fr",
+            "role":"Developer"
+        }
+    ],
+    "support":{
+        "website":"https://www.webexmachina.fr/",
+        "issues":"https://github.com/webexmachina/contao-webp-converter-bundle/issues",
+        "source":"https://github.com/webexmachina/contao-webp-converter-bundle"
+    },
+    "require": {
+        "php": ">=7.1",
+        "contao/core-bundle": "~4.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload":{
+        "psr-4": {
+            "WEM\\WebpConverterBundle\\": "src/"
+        },
+        "classmap": [
+            "src/Resources/contao/"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/"
+        ]
+    },
+    "extra":{
+        "contao-manager-plugin": "WEM\\WebpConverterBundle\\ContaoManager\\Plugin"
+    }
+}
