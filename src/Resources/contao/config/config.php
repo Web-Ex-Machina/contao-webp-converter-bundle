@@ -1,5 +1,5 @@
 <?php
 
-use WEM\WebpConverterBundle\EventListener\ParseFrontendTemplateListener;
+use WEM\WebpConverterBundle\EventListener\ModifyFrontendPageListener;
 
-$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][] = [ParseFrontendTemplateListener::class, 'convertPictures'];
+$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = [ModifyFrontendPageListener::class, 'convertPictures'];
