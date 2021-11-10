@@ -20,6 +20,14 @@ use WEM\WebpConverterBundle\Util\Helper;
 
 class ModifyFrontendPageListener
 {
+    /**
+     * @var array
+     */
+    protected $arrExcludedExtensions = ['webp'];
+
+    /**
+     * Convert pictures from HTML buffer.
+     */
     public function convertPictures(string $buffer, string $templateName): string
     {
         // Skip the browser cannot handle webp
@@ -49,21 +57,23 @@ class ModifyFrontendPageListener
     /**
      * Extract images paths.
      *
-     * @param string $buffer            [HTML Buffer]
-     * @param array  $excludeExtensions [Extensions to exclude (optional)]
+     * @param string $buffer             [HTML Buffer]
+     * @param array  $excludedExtensions [Extensions to exclude (optional)]
      *
      * @return array [Pictures paths & extension]
      */
-    protected function extractPaths(string $buffer, array $excludeExtensions = [])
+    protected function extractPaths(string $buffer, array $excludedExtensions = [])
     {
         preg_match_all('/src="([^"]*)"/', $buffer, $result);
         $paths = [];
+
+        $excludedExtensions = array_merge($excludedExtensions, $this->arrExcludedExtensions);
 
         if (!empty($result[1])) {
             foreach ($result[1] as $p) {
                 $data = pathinfo($p);
 
-                if ($excludeExtensions && \in_array($data['extension'], $excludeExtensions, true)) {
+                if (\in_array($data['extension'], $excludedExtensions, true)) {
                     continue;
                 }
 
@@ -79,6 +89,11 @@ class ModifyFrontendPageListener
         return $paths;
     }
 
+    /**
+     * Call Webp Converter library & cache system.
+     *
+     * @param bool|bool $skipCache
+     */
     private function convertToWebP(string $src, string $destination, array $options = [], bool $skipCache = false): string
     {
         // check if encoded
