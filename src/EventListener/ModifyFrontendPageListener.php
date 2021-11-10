@@ -4,6 +4,8 @@ namespace WEM\WebpConverterBundle\EventListener;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendTemplate;
+use Symfony\Component\Filesystem\Filesystem;
+use WebPConvert\WebPConvert;
 use WEM\WebpConverterBundle\Util\Helper;
 
 class ModifyFrontendPageListener
@@ -12,16 +14,24 @@ class ModifyFrontendPageListener
     {   
         // Skip the browser cannot handle webp
         if(!Helper::hasWebPSupport()) {
-            return;
+            return $buffer;
         }
 
         // Skip main buffer, everything should be treated
         if (false !== strpos($templateName, "fe_page")) {
             $paths = $this->extractPaths($buffer);
-            dump($paths);
-        }
+            
+            if(!empty($paths)) {
+                foreach($paths as $p) {
+                    $webp = $this->convertToWebP(
+                        $p['path'],
+                        sprintf('assets/webpconverter/%s/%s', substr($p['name'], 0, 1), $p['name'] . '.webp')
+                    );
 
-        
+                    $buffer = str_replace($p['path'], $webp, $buffer);
+                }
+            }
+        }
 
         return $buffer;
     }
@@ -40,15 +50,17 @@ class ModifyFrontendPageListener
 
         if(!empty($result[1])) {
             foreach ($result[1] as $p) {
-                $ext = pathinfo($p, PATHINFO_EXTENSION);
+                $data = pathinfo($p);
 
-                if($excludeExtensions && in_array($ext, $excludeExtensions)) {
+                if($excludeExtensions && in_array($data['extension'], $excludeExtensions)) {
                     continue;
                 }
 
                 $paths[] = [
                     'path' => $p,
-                    'extension' => $ext
+                    'name' => $data['basename'],
+                    'dir' => $data['dirname'],
+                    'extension' => $data['extension']
                 ];
             }
         }
@@ -56,8 +68,32 @@ class ModifyFrontendPageListener
         return $paths;
     }
 
-    private function convertToWebP(string $path)
+    private function convertToWebP(string $src, string $destination, array $options = [], bool $skipCache = false): string
     {
+        // check if encoded
+        if (preg_match('~%[0-9A-F]{2}~i', $src)) {
+            $src = rawurldecode($src);
+        }
+        if (preg_match('~%[0-9A-F]{2}~i', $destination)) {
+            $destination = rawurldecode($destination);
+        }
 
+        // Check if the wanted file already exists
+        $filesystem = new FileSystem();
+
+        if ($filesystem->exists($destination)) {
+            return $destination;
+        }
+
+        try {
+            WebPConvert::convert($src, $destination, $options);
+            return $destination;
+
+        } catch (ConversionFailedException $e) {
+            return $src;
+
+        } catch (TargetNotFoundException $e) {
+            return $src;
+        }
     }
 }
