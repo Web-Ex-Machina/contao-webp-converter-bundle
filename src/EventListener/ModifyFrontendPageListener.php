@@ -4,11 +4,17 @@ namespace WEM\WebpConverterBundle\EventListener;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendTemplate;
+use WEM\WebpConverterBundle\Util\Helper;
 
 class ModifyFrontendPageListener
 {
     public function convertPictures(string $buffer, string $templateName): string
-    {
+    {   
+        // Skip the browser cannot handle webp
+        if(!Helper::hasWebPSupport()) {
+            return;
+        }
+
         // Skip main buffer, everything should be treated
         if (false !== strpos($templateName, "fe_page")) {
             $paths = $this->extractPaths($buffer);
