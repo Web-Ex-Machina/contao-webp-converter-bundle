@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  *
  * @author Web ex Machina <https://www.webexmachina.fr>
  */
-class WEMWebpConverterBundleExtension extends Extension
+class WEMWebpConverterExtension extends Extension
 {
     /**
      * {@inheritdoc}
