@@ -1,9 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * WebP Converter for Contao Open Source CMS
+ * Copyright (c) 2021 Web ex Machina
+ *
+ * @category ContaoBundle
+ * @package  Web-Ex-Machina/contao-webp-converter-bundle
+ * @author   Web ex Machina <contact@webexmachina.fr>
+ * @link     https://github.com/Web-Ex-Machina/contao-webp-converter-bundle/
+ */
+
 namespace WEM\WebpConverterBundle\EventListener;
 
-use Contao\CoreBundle\ServiceAnnotation\Hook;
-use Contao\FrontendTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use WebPConvert\WebPConvert;
 use WEM\WebpConverterBundle\Util\Helper;
@@ -11,21 +21,21 @@ use WEM\WebpConverterBundle\Util\Helper;
 class ModifyFrontendPageListener
 {
     public function convertPictures(string $buffer, string $templateName): string
-    {   
+    {
         // Skip the browser cannot handle webp
-        if(!Helper::hasWebPSupport()) {
+        if (!Helper::hasWebPSupport()) {
             return $buffer;
         }
 
         // Skip main buffer, everything should be treated
-        if (false !== strpos($templateName, "fe_page")) {
+        if (false !== strpos($templateName, 'fe_page')) {
             $paths = $this->extractPaths($buffer);
-            
-            if(!empty($paths)) {
-                foreach($paths as $p) {
+
+            if (!empty($paths)) {
+                foreach ($paths as $p) {
                     $webp = $this->convertToWebP(
                         $p['path'],
-                        sprintf('assets/webpconverter/%s/%s', substr($p['name'], 0, 1), $p['name'] . '.webp')
+                        sprintf('assets/webpconverter/%s/%s', substr($p['name'], 0, 1), $p['name'].'.webp')
                     );
 
                     $buffer = str_replace($p['path'], $webp, $buffer);
@@ -37,22 +47,23 @@ class ModifyFrontendPageListener
     }
 
     /**
-     * Extract images paths
-     * 
-     * @param  string $buffer            [HTML Buffer]
-     * @param  array  $excludeExtensions [Extensions to exclude (optional)]
-     * 
-     * @return array                    [Pictures paths & extension]
+     * Extract images paths.
+     *
+     * @param string $buffer            [HTML Buffer]
+     * @param array  $excludeExtensions [Extensions to exclude (optional)]
+     *
+     * @return array [Pictures paths & extension]
      */
-    protected function extractPaths(string $buffer, array $excludeExtensions = []) {
+    protected function extractPaths(string $buffer, array $excludeExtensions = [])
+    {
         preg_match_all('/src="([^"]*)"/', $buffer, $result);
         $paths = [];
 
-        if(!empty($result[1])) {
+        if (!empty($result[1])) {
             foreach ($result[1] as $p) {
                 $data = pathinfo($p);
 
-                if($excludeExtensions && in_array($data['extension'], $excludeExtensions)) {
+                if ($excludeExtensions && \in_array($data['extension'], $excludeExtensions, true)) {
                     continue;
                 }
 
@@ -60,7 +71,7 @@ class ModifyFrontendPageListener
                     'path' => $p,
                     'name' => $data['basename'],
                     'dir' => $data['dirname'],
-                    'extension' => $data['extension']
+                    'extension' => $data['extension'],
                 ];
             }
         }
@@ -87,11 +98,10 @@ class ModifyFrontendPageListener
 
         try {
             WebPConvert::convert($src, $destination, $options);
-            return $destination;
 
+            return $destination;
         } catch (ConversionFailedException $e) {
             return $src;
-
         } catch (TargetNotFoundException $e) {
             return $src;
         }

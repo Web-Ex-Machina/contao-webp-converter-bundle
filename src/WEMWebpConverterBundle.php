@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 /**
- * SMARTGEAR for Contao Open Source CMS
- * Copyright (c) 2015-2020 Web ex Machina
+ * WebP Converter for Contao Open Source CMS
+ * Copyright (c) 2021 Web ex Machina
  *
  * @category ContaoBundle
- * @package  Web-Ex-Machina/contao-smartgear
+ * @package  Web-Ex-Machina/contao-webp-converter-bundle
  * @author   Web ex Machina <contact@webexmachina.fr>
- * @link     https://github.com/Web-Ex-Machina/contao-smartgear/
+ * @link     https://github.com/Web-Ex-Machina/contao-webp-converter-bundle/
  */
 
 namespace WEM\WebpConverterBundle;
