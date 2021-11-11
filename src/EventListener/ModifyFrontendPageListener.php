@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace WEM\WebpConverterBundle\EventListener;
 
+use Contao\Config;
 use Symfony\Component\Filesystem\Filesystem;
 use WebPConvert\WebPConvert;
 use WEM\WebpConverterBundle\Util\Helper;
@@ -31,7 +32,7 @@ class ModifyFrontendPageListener
     public function convertPictures(string $buffer, string $templateName): string
     {
         // Skip the browser cannot handle webp
-        if (!Helper::hasWebPSupport()) {
+        if (!Helper::hasWebPSupport() || !Config::get('wem_useWebp')) {
             return $buffer;
         }
 

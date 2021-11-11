@@ -1,0 +1,27 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="system/modules/wem-webp-converter/languages/en/tl_settings.php" source-language="en" target-language="fr">
+    <body>
+    	<trans-unit id="tl_settings.wem_webp_legend">
+				<source>WebP converter settings</source>
+				<target>Paramètres du convertisseur WebP</target>
+			</trans-unit>
+
+			<trans-unit id="tl_settings.wem_useWebp.0">
+				<source>Convert WebP</source>
+				<target>Convertir en WebP</target>
+			</trans-unit>
+			<trans-unit id="tl_settings.wem_useWebp.1">
+				<source>Check to automaticly convert website pictures in WebP format</source>
+				<target>Cocher pour automatiquement convertir les images du site au format WebP</target>
+			</trans-unit>
+			<trans-unit id="tl_settings.wem_webpQuality.0">
+				<source>Encoding quality</source>
+				<target>Qualité d'encodage</target>
+			</trans-unit>
+			<trans-unit id="tl_settings.wem_webpQuality.1">
+				<source>Enter the wanted encoding quality (auto by default)</source>
+				<target>Indiquez la qualité d'encodage souhaitée (auto par défaut)</target>
+			</trans-unit>
+		</body>
+  </file>
+</xliff>
