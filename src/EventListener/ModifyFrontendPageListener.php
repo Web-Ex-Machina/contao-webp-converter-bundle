@@ -41,10 +41,18 @@ class ModifyFrontendPageListener
             $paths = $this->extractPaths($buffer);
 
             if (!empty($paths)) {
+                // Get encoding config
+                $options = ['quality' => 'auto'];
+
+                if(Config::get('wem_webpQuality')) {
+                    $options['quality'] = intval(Config::get('wem_webpQuality'));
+                }
+
                 foreach ($paths as $p) {
                     $webp = $this->convertToWebP(
                         $p['path'],
-                        sprintf('assets/webpconverter/%s/%s', substr($p['name'], 0, 1), $p['name'].'.webp')
+                        sprintf('assets/webpconverter/%s/%s', substr($p['name'], 0, 1), $p['name'].'.webp'),
+                        $options
                     );
 
                     $buffer = str_replace($p['path'], $webp, $buffer);
@@ -108,7 +116,7 @@ class ModifyFrontendPageListener
         // Check if the wanted file already exists
         $filesystem = new FileSystem();
 
-        if ($filesystem->exists($destination)) {
+        if ($filesystem->exists($destination) && !$skipCache) {
             return $destination;
         }
 
