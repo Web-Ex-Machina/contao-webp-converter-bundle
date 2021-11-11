@@ -44,8 +44,8 @@ class ModifyFrontendPageListener
                 // Get encoding config
                 $options = ['quality' => 'auto'];
 
-                if(Config::get('wem_webpQuality')) {
-                    $options['quality'] = intval(Config::get('wem_webpQuality'));
+                if (Config::get('wem_webpQuality')) {
+                    $options['quality'] = (int) (Config::get('wem_webpQuality'));
                 }
 
                 foreach ($paths as $p) {
