@@ -124,9 +124,11 @@ class ModifyFrontendPageListener
             WebPConvert::convert($src, $destination, $options);
 
             return $destination;
-        } catch (ConversionFailedException $e) {
+        } catch(\WebPConvert\Exceptions\InvalidInput\InvalidImageTypeException $e) {
             return $src;
-        } catch (TargetNotFoundException $e) {
+        } catch (\WebPConvert\Exceptions\WebPConvertException $e) {
+            return $src;
+        } catch (\WebPConvert\Exceptions\InvalidInput\TargetNotFoundException $e) {
             return $src;
         }
     }
