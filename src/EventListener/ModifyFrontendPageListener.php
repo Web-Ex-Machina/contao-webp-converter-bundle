@@ -73,7 +73,7 @@ class ModifyFrontendPageListener
      */
     protected function extractPaths(string $buffer, array $excludedExtensions = [])
     {
-        preg_match_all('/src="([^"]*)"/', $buffer, $result);
+        preg_match_all('/img.*src="([^"]*)"/', $buffer, $result);
         $paths = [];
 
         $excludedExtensions = array_merge($excludedExtensions, $this->arrExcludedExtensions);
