@@ -120,6 +120,10 @@ class ModifyFrontendPageListener
             return $destination;
         }
 
+        if(!$filesystem->exists($src)){
+            return $src;
+        }
+
         try {
             WebPConvert::convert($src, $destination, $options);
 
